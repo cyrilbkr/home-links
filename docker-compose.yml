@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  home-links:
+    image: ghcr.io/cyrilbkr/home-links-pv:latest
+    pull_policy: always
+    container_name: home-links
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - HOME_TITLE=Home Links
+      - HOME_SUBTITLE=Your personalized home page
+      - HOME_FOOTER=© 2026 Home Links
+      # Each section is a separate variable (HOME_SECTION_1, HOME_SECTION_2, etc.)
+      - |
+        HOME_SECTION_1={"id":"productivity","title":"Productivity","icon":"⚡","links":[
+          {"name":"Gmail","url":"https://gmail.com","icon":"📧","description":"Email"},
+          {"name":"Google Drive","url":"https://drive.google.com","icon":"📁","description":"Cloud storage"},
+          {"name":"Notion","url":"https://notion.so","icon":"📝","description":"Notes & Docs"}
+        ]}
+      - |
+        HOME_SECTION_2={"id":"dev","title":"Development","icon":"💻","links":[
+          {"name":"GitHub","url":"https://github.com","icon":"🐙","description":"Code hosting"},
+          {"name":"GitLab","url":"https://gitlab.com","icon":"🦊","description":"DevOps platform"},
+          {"name":"Stack Overflow","url":"https://stackoverflow.com","icon":"📚","description":"Q&A"}
+        ]}
+      - |
+        HOME_SECTION_3={"id":"social","title":"Social","icon":"🌐","links":[
+          {"name":"Twitter/X","url":"https://x.com","icon":"🐦","description":"Microblogging"},
+          {"name":"LinkedIn","url":"https://linkedin.com","icon":"💼","description":"Professional network"},
+          {"name":"Reddit","url":"https://reddit.com","icon":"🔴","description":"Forums"}
+        ]}
+      - |
+        HOME_SECTION_4={"id":"media","title":"Media","icon":"🎬","links":[
+          {"name":"YouTube","url":"https://youtube.com","icon":"▶️","description":"Videos"},
+          {"name":"Spotify","url":"https://spotify.com","icon":"🎵","description":"Music"},
+          {"name":"Netflix","url":"https://netflix.com","icon":"🎥","description":"Streaming"}
+        ]}
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
